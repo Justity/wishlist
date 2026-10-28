@@ -3,147 +3,138 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Вишлист Алёны</title>
-<meta name="description" content="Вишлист Алёны: желания, тир-лист и ссылка, которой можно поделиться">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎀</text></svg>">
+<title>Вишлист</title>
+<meta name="description" content="Вишлист: желания, тир-лист и ссылка, которой можно поделиться">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231c1b1a'/><path d='M9 16h14M16 9v14' stroke='white' stroke-width='3' stroke-linecap='round'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fff6f8;
-    --bg2: #ffe9ef;
+    --bg: #f5f4f2;
     --card: #ffffff;
-    --text: #3b2a33;
-    --muted: #8c7380;
-    --accent: #e75a8a;
-    --accent-2: #c94477;
-    --accent-soft: #ffd9e5;
-    --border: #f3d3de;
-    --shadow: 0 6px 24px rgba(201, 68, 119, .10);
-    --radius: 18px;
-    --tS: #ff8fab; --tA: #ffb38a; --tB: #ffd978; --tC: #a8e6a1; --tD: #9cc9ff;
+    --soft: #efeeeb;
+    --text: #1c1b1a;
+    --muted: #75716d;
+    --accent: #1c1b1a;
+    --on-accent: #ffffff;
+    --border: #e3e1dd;
+    --focus: #8a8580;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 14px rgba(0, 0, 0, .04);
+    --radius: 12px;
+    --tS: #e2b5b5; --tA: #e6c7a8; --tB: #e4d9a6; --tC: #bcd3b4; --tD: #b5c8db;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1d1519;
-      --bg2: #2a1d23;
-      --card: #2b2026;
-      --text: #f6e9ee;
-      --muted: #b89dab;
-      --accent: #ff7aa6;
-      --accent-2: #ff9bbd;
-      --accent-soft: #4a2a37;
-      --border: #44323b;
-      --shadow: 0 6px 24px rgba(0, 0, 0, .35);
+      --bg: #141414;
+      --card: #1e1e1d;
+      --soft: #282826;
+      --text: #ecebe8;
+      --muted: #9a9690;
+      --accent: #ecebe8;
+      --on-accent: #141414;
+      --border: #30302e;
+      --focus: #77736e;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3);
     }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
-    font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    color: var(--text);
-    background: radial-gradient(1200px 600px at 10% -10%, var(--bg2), transparent 60%),
-                radial-gradient(900px 500px at 110% 10%, var(--bg2), transparent 60%),
-                var(--bg);
-    min-height: 100vh;
-    line-height: 1.45;
+    font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--text); background: var(--bg); min-height: 100vh; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
   }
   button, input, textarea, select { font: inherit; color: inherit; }
-  a { color: var(--accent-2); }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 80px; }
+  a { color: inherit; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 16px 80px; }
 
-  header.hero { text-align: center; padding: 18px 0 10px; }
-  .hero .bow { font-size: 44px; line-height: 1; }
+  header.hero { text-align: center; padding: 8px 0 4px; }
   .title-input, .hero h1 {
-    font-family: "Playfair Display", Georgia, serif; font-style: italic;
-    font-size: clamp(30px, 6vw, 46px); font-weight: 600;
-    margin: 8px 0 4px; text-align: center; border: none; background: transparent;
-    width: 100%; outline: none; color: var(--text);
+    font-size: clamp(28px, 5vw, 38px); font-weight: 700; letter-spacing: -.02em;
+    margin: 0 0 4px; text-align: center; border: none; background: transparent;
+    width: 100%; outline: none; color: var(--text); padding: 2px 8px; border-radius: 8px;
   }
   .subtitle-input, .hero p.sub {
     text-align: center; color: var(--muted); border: none; background: transparent;
-    width: 100%; outline: none; margin: 0; font-size: 16px;
+    width: 100%; outline: none; margin: 0; font-size: 15px; padding: 2px 8px; border-radius: 8px;
   }
-  .title-input:focus, .subtitle-input:focus { background: var(--accent-soft); border-radius: 12px; }
+  .title-input:focus, .subtitle-input:focus { background: var(--soft); }
 
   .quick {
-    display: flex; gap: 8px; margin: 22px auto 0; max-width: 640px;
-    background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 6px;
+    display: flex; gap: 6px; margin: 24px auto 0; max-width: 640px;
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 5px;
     box-shadow: var(--shadow);
   }
-  .quick input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; padding: 8px 14px; }
+  .quick:focus-within { border-color: var(--focus); }
+  .quick input { flex: 1; min-width: 0; border: none; background: transparent; outline: none; padding: 8px 12px; }
   .quick-hint { text-align: center; font-size: 13px; color: var(--muted); margin: 8px 0 0; }
 
-  .toolbar {
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
-    margin: 18px 0 18px;
-  }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0 24px; }
   .btn {
-    border: 1px solid var(--border); background: var(--card); padding: 10px 16px;
-    border-radius: 999px; cursor: pointer; font-weight: 700; display: inline-flex;
-    gap: 8px; align-items: center; box-shadow: var(--shadow); transition: transform .12s, background .12s;
+    border: 1px solid var(--border); background: var(--card); padding: 9px 16px;
+    border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; display: inline-flex;
+    gap: 6px; align-items: center; justify-content: center; transition: background .12s, border-color .12s;
     text-decoration: none; color: inherit;
   }
-  .btn:hover { transform: translateY(-1px); }
-  .btn:active { transform: translateY(0); }
-  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .btn.primary:hover { background: var(--accent-2); }
-  .btn.ghost { box-shadow: none; background: transparent; }
-  .btn.small { padding: 6px 12px; font-size: 14px; }
+  .btn:hover { border-color: var(--focus); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:hover { opacity: .9; }
+  .btn.ghost { background: transparent; border-color: transparent; }
+  .btn.ghost:hover { background: var(--soft); }
+  .btn.small { padding: 6px 12px; font-size: 13px; }
+  .btn:disabled { opacity: .5; cursor: default; }
 
   .tabs {
-    display: flex; gap: 4px; margin: 0 auto 18px; width: max-content; max-width: 100%;
-    background: var(--card); border: 1px solid var(--border); border-radius: 999px; padding: 4px;
+    display: flex; gap: 2px; margin: 0 auto 16px; width: max-content; max-width: 100%;
+    background: var(--soft); border-radius: 10px; padding: 3px;
   }
   .tabs button {
-    border: none; background: transparent; padding: 8px 18px; border-radius: 999px; cursor: pointer; font-weight: 700; color: var(--muted);
+    border: none; background: transparent; padding: 7px 18px; border-radius: 8px; cursor: pointer;
+    font-weight: 600; font-size: 14px; color: var(--muted);
   }
-  .tabs button.on { background: var(--accent); color: #fff; }
+  .tabs button.on { background: var(--card); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 14px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 12px; }
   .chip {
-    border: 1px solid var(--border); background: var(--card); padding: 6px 14px; border-radius: 999px;
-    cursor: pointer; font-size: 14px; font-weight: 600; color: var(--muted);
+    border: 1px solid var(--border); background: var(--card); padding: 5px 12px; border-radius: 999px;
+    cursor: pointer; font-size: 13px; font-weight: 500; color: var(--muted);
   }
-  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .sort { display: flex; justify-content: center; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-  .sort select { border: 1px solid var(--border); background: var(--card); border-radius: 10px; padding: 4px 8px; }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .sort { display: flex; justify-content: center; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; margin-bottom: 12px; }
+  .sort select { border: 1px solid var(--border); background: var(--card); border-radius: 8px; padding: 4px 8px; }
 
-  .stats { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+  .stats { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 14px; }
 
   /* ---------- cards ---------- */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
   .card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
-    position: relative;
   }
-  .card.got { opacity: .55; }
+  .card.got { opacity: .5; }
   .card.got .name { text-decoration: line-through; }
   .thumb {
-    aspect-ratio: 16 / 10; background: var(--accent-soft); display: grid; place-items: center;
-    font-size: 54px; overflow: hidden;
+    aspect-ratio: 4 / 3; background: var(--soft); display: grid; place-items: center;
+    font-size: 44px; overflow: hidden;
   }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+  .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
   .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .name { font-weight: 800; font-size: 17px; margin: 0; word-break: break-word; }
-  .price { font-weight: 800; color: var(--accent-2); white-space: nowrap; }
-  .badge {
-    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--muted);
-  }
+  .name { font-weight: 600; font-size: 15px; margin: 0; word-break: break-word; }
+  .price { font-weight: 600; white-space: nowrap; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
   .badge b {
-    display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 7px;
-    color: #3b2a33; font-size: 13px; font-weight: 800;
+    display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px;
+    color: #1c1b1a; font-size: 12px; font-weight: 700;
   }
-  .cat { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--bg2); padding: 2px 10px; border-radius: 999px; }
-  .note { color: var(--muted); font-size: 14px; margin: 0; white-space: pre-wrap; word-break: break-word; }
+  .cat { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--soft); padding: 2px 8px; border-radius: 6px; }
+  .note { color: var(--muted); font-size: 13px; margin: 0; white-space: pre-wrap; word-break: break-word; }
   .card .actions { display: flex; gap: 6px; margin-top: auto; padding-top: 8px; flex-wrap: wrap; }
   .icon-btn {
-    border: 1px solid var(--border); background: transparent; border-radius: 10px; padding: 6px 9px;
-    cursor: pointer; font-size: 14px; line-height: 1;
+    border: 1px solid var(--border); background: transparent; border-radius: 8px; padding: 5px 9px;
+    cursor: pointer; font-size: 13px; line-height: 1.2; color: var(--muted);
   }
-  .icon-btn:hover { background: var(--accent-soft); }
+  .icon-btn:hover { background: var(--soft); color: var(--text); }
   .icon-btn:disabled { opacity: .35; cursor: default; }
 
   /* ---------- tier list ---------- */
@@ -151,120 +142,133 @@
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     overflow: hidden; box-shadow: var(--shadow);
   }
-  .tier { display: grid; grid-template-columns: 108px 1fr; border-bottom: 1px solid var(--border); min-height: 96px; }
+  .tier { display: grid; grid-template-columns: 108px 1fr; border-bottom: 1px solid var(--border); min-height: 92px; }
   .tier:last-child { border-bottom: none; }
   .tier-label {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
-    padding: 8px 6px; color: #3b2a33; text-align: center;
+    padding: 8px 6px; color: #1c1b1a; text-align: center;
   }
-  .tier-label .letter { font-size: 30px; font-weight: 800; line-height: 1; }
+  .tier-label .letter { font-size: 26px; font-weight: 700; line-height: 1; }
   .tier-label input, .tier-label span {
-    width: 100%; border: none; background: transparent; text-align: center; font-size: 12px; font-weight: 700;
-    color: #3b2a33; outline: none; padding: 2px; border-radius: 6px;
+    width: 100%; border: none; background: transparent; text-align: center; font-size: 12px; font-weight: 500;
+    color: #1c1b1a; outline: none; padding: 2px; border-radius: 6px;
   }
-  .tier-label input:focus { background: rgba(255,255,255,.55); }
-  .tier.pool .tier-label { background: var(--bg2); color: var(--muted); }
+  .tier-label input:focus { background: rgba(255,255,255,.6); }
+  .tier.pool .tier-label { background: var(--soft); color: var(--muted); }
   .tier.pool .tier-label span { color: var(--muted); }
-  .tier-drop {
-    display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; align-content: flex-start; transition: background .12s;
-  }
-  .tier-drop.over { background: var(--accent-soft); }
+  .tier.pool .letter { font-size: 13px; font-weight: 600; }
+  .tier-drop { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px; align-content: flex-start; transition: background .12s; }
+  .tier-drop.over { background: var(--soft); }
   .tier-drop .placeholder { color: var(--muted); font-size: 13px; align-self: center; padding: 0 6px; }
   .tile {
-    width: 84px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; user-select: none;
+    width: 80px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; user-select: none;
     -webkit-user-select: none; position: relative;
   }
   .edit .tile { touch-action: none; cursor: grab; }
   .tile .pic {
-    width: 84px; height: 84px; border-radius: 14px; overflow: hidden; background: var(--accent-soft);
-    display: grid; place-items: center; font-size: 36px; border: 1px solid var(--border);
+    width: 80px; height: 80px; border-radius: 10px; overflow: hidden; background: var(--soft);
+    display: grid; place-items: center; font-size: 32px; border: 1px solid var(--border);
   }
-  .tile .pic img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .tile .pic img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; background: #fff; }
   .tile .cap {
-    font-size: 11px; font-weight: 700; line-height: 1.2; text-align: center; overflow: hidden;
+    font-size: 11px; font-weight: 500; line-height: 1.25; text-align: center; overflow: hidden;
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: break-word;
   }
-  .tile.got { opacity: .45; }
+  .tile.got { opacity: .4; }
   .tile.dragging { opacity: .25; }
   .tile.insert-before::before {
-    content: ""; position: absolute; left: -6px; top: 4px; height: 76px; width: 4px; border-radius: 2px; background: var(--accent);
+    content: ""; position: absolute; left: -6px; top: 4px; height: 72px; width: 3px; border-radius: 2px; background: var(--accent);
   }
   .drag-ghost {
-    position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -50%) rotate(-4deg) scale(1.06);
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+    position: fixed; z-index: 100; pointer-events: none; transform: translate(-50%, -50%) scale(1.05);
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,.2));
   }
   .tier-help { text-align: center; color: var(--muted); font-size: 13px; margin: 10px 0 0; }
 
-  .empty { text-align: center; color: var(--muted); padding: 50px 16px; border: 2px dashed var(--border); border-radius: var(--radius); }
-  .empty .big { font-size: 56px; }
+  .empty { text-align: center; color: var(--muted); padding: 48px 16px; border: 1px dashed var(--border); border-radius: var(--radius); }
+  .empty b { color: var(--text); }
 
   /* ---------- dialogs ---------- */
   dialog {
-    border: none; border-radius: 22px; padding: 0; width: min(560px, calc(100% - 32px));
-    background: var(--card); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    border: 1px solid var(--border); border-radius: 16px; padding: 0; width: min(560px, calc(100% - 32px));
+    background: var(--card); color: var(--text); box-shadow: 0 20px 50px rgba(0,0,0,.18);
   }
-  dialog::backdrop { background: rgba(40, 10, 25, .45); backdrop-filter: blur(3px); }
-  .dlg { padding: 22px; }
-  .dlg h2 { margin: 0 0 14px; font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 600; }
+  dialog::backdrop { background: rgba(0, 0, 0, .35); }
+  .dlg { padding: 20px; }
+  .dlg h2 { margin: 0 0 14px; font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
   .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
-  .field label { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .field label { font-size: 12px; font-weight: 600; color: var(--muted); }
   .field input, .field textarea, .field select {
-    border: 1px solid var(--border); background: var(--bg); border-radius: 12px; padding: 10px 12px; outline: none; width: 100%;
+    border: 1px solid var(--border); background: var(--bg); border-radius: 8px; padding: 9px 11px; outline: none; width: 100%;
   }
-  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
-  .field textarea { resize: vertical; min-height: 64px; }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--focus); }
   .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   @media (max-width: 480px) { .two { grid-template-columns: 1fr; } }
   .tierpick { display: flex; gap: 6px; flex-wrap: wrap; }
   .tierpick button {
-    flex: 1; min-width: 44px; border: 2px solid transparent; border-radius: 12px; padding: 6px 4px; cursor: pointer;
-    font-weight: 800; color: #3b2a33; line-height: 1.1;
+    flex: 1; min-width: 44px; border: 2px solid transparent; border-radius: 8px; padding: 5px 4px; cursor: pointer;
+    font-weight: 700; color: #1c1b1a; line-height: 1.15;
   }
-  .tierpick button small { display: block; font-size: 10px; font-weight: 700; opacity: .8; }
-  .tierpick button.on { border-color: var(--text); transform: scale(1.04); }
-  .tierpick button.none { background: var(--bg2); color: var(--muted); }
-  .img-row { display: flex; gap: 8px; }
-  .img-row input { flex: 1; min-width: 0; }
+  .tierpick button small { display: block; font-size: 10px; font-weight: 500; opacity: .8; }
+  .tierpick button.on { border-color: var(--text); }
+  .tierpick button.none { background: var(--soft); color: var(--muted); }
+  .img-row, .url-row { display: flex; gap: 6px; }
+  .img-row input, .url-row input { flex: 1; min-width: 0; }
   .preview-wrap { position: relative; display: none; margin: -4px 0 12px; }
-  .preview-img { width: 100%; max-height: 170px; object-fit: contain; border-radius: 12px; background: var(--bg2); display: block; }
+  .preview-img { width: 100%; max-height: 170px; object-fit: contain; border-radius: 8px; background: #fff; border: 1px solid var(--border); display: block; }
   .preview-wrap .icon-btn { position: absolute; top: 6px; right: 6px; background: var(--card); }
+
+  .picker { margin: -4px 0 12px; }
+  .picker-head { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .picker-grid { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .picker-grid button {
+    flex: 0 0 76px; height: 76px; padding: 0; border: 2px solid var(--border); border-radius: 8px; overflow: hidden;
+    background: #fff; cursor: pointer;
+  }
+  .picker-grid button.on { border-color: var(--text); }
+  .picker-grid img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .picker-msg { font-size: 13px; color: var(--muted); }
+  .spinner {
+    display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--muted);
+    border-radius: 50%; animation: spin .8s linear infinite; vertical-align: -2px; margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   .dlg .foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
   .share-box { display: flex; gap: 8px; }
-  .share-box input { flex: 1; min-width: 0; }
+  .share-box input { flex: 1; min-width: 0; border: 1px solid var(--border); background: var(--bg); border-radius: 8px; padding: 8px 10px; }
   .hint { font-size: 13px; color: var(--muted); }
-  #detailDlg .card { box-shadow: none; border: none; }
-  #detailDlg .thumb { aspect-ratio: 16 / 11; }
+  #detailDlg .card { box-shadow: none; border: none; border-radius: 0; }
 
   .banner {
-    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px;
     display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;
-    box-shadow: var(--shadow); margin: 16px 0;
+    margin: 16px 0; font-size: 14px;
   }
 
   .toast {
     position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
-    background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-weight: 700;
+    background: var(--text); color: var(--bg); padding: 9px 16px; border-radius: 10px; font-weight: 500; font-size: 14px;
     opacity: 0; pointer-events: none; transition: all .25s; z-index: 150; max-width: calc(100% - 32px); text-align: center;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 40px; }
+  footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 40px; }
   .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="hero">
-    <div class="bow">🎀</div>
-    <input id="title" class="title-input" maxlength="80" placeholder="Вишлист Алёны" aria-label="Название вишлиста">
-    <input id="subtitle" class="subtitle-input" maxlength="140" placeholder="Нажми, чтобы добавить подпись — например, «на день рождения»" aria-label="Подпись">
+    <input id="title" class="title-input" maxlength="80" placeholder="Вишлист" aria-label="Название вишлиста">
+    <input id="subtitle" class="subtitle-input" maxlength="140" placeholder="Добавить подпись" aria-label="Подпись">
     <h1 id="viewTitle" class="hidden"></h1>
     <p id="viewSubtitle" class="sub hidden"></p>
   </header>
 
   <div id="viewBanner" class="banner hidden">
-    <span>👀 Это вишлист, которым с тобой поделились.</span>
+    <span>Это вишлист, которым с тобой поделились.</span>
     <span style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn small" id="copyToMine">Сохранить себе и редактировать</button>
+      <button class="btn small" id="copyToMine">Сохранить себе</button>
       <button class="btn small ghost" id="openMine">Мой вишлист</button>
     </span>
   </div>
@@ -272,19 +276,19 @@
   <div id="editTop">
     <form class="quick" id="quick" autocomplete="off">
       <input id="qInput" placeholder="Вставь ссылку на товар или напиши, что хочется…" aria-label="Быстро добавить">
-      <button class="btn primary small" type="submit">＋ Добавить</button>
+      <button class="btn primary small" type="submit">Добавить</button>
     </form>
-    <p class="quick-hint">Ссылка → откроется карточка товара · просто текст → желание добавится сразу</p>
+    <p class="quick-hint">Ссылка — подтянем название и картинки с сайта · просто текст — желание добавится сразу</p>
     <div class="toolbar">
-      <button class="btn" id="addBtn">📝 Подробно</button>
-      <button class="btn" id="shareBtn">💌 Поделиться</button>
-      <button class="btn" id="moreBtn">⚙️ Ещё</button>
+      <button class="btn" id="addBtn">Добавить вручную</button>
+      <button class="btn" id="shareBtn">Поделиться</button>
+      <button class="btn" id="moreBtn">Ещё</button>
     </div>
   </div>
 
   <div class="tabs" id="tabs">
-    <button data-view="tiers">🏆 Тир-лист</button>
-    <button data-view="cards">🗂️ Карточки</button>
+    <button data-view="tiers">Тир-лист</button>
+    <button data-view="cards">Карточки</button>
   </div>
 
   <div class="filters" id="filters"></div>
@@ -305,11 +309,10 @@
   </div>
   <div class="grid hidden" id="grid"></div>
   <div class="empty hidden" id="empty">
-    <div class="big">🧸</div>
-    <p><b>Пока здесь пусто</b><br>Вставь ссылку на товар в поле сверху — и он появится здесь</p>
+    <p><b>Пока пусто</b><br>Вставь ссылку на товар в поле сверху — и он появится здесь</p>
   </div>
 
-  <footer>Сделано с любовью для Алёны 💗 · данные хранятся только в этом браузере</footer>
+  <footer>Данные хранятся только в этом браузере</footer>
 </div>
 
 <!-- Item editor -->
@@ -317,12 +320,20 @@
   <form class="dlg" id="itemForm" method="dialog">
     <h2 id="itemDlgTitle">Новое желание</h2>
     <div class="field">
-      <label for="fName">Что хочется? *</label>
+      <label for="fName">Название *</label>
       <input id="fName" required maxlength="120" placeholder="Например, духи Chanel Chance">
     </div>
     <div class="field">
       <label for="fUrl">Ссылка на товар</label>
-      <input id="fUrl" placeholder="https://…" inputmode="url">
+      <div class="url-row">
+        <input id="fUrl" placeholder="https://…" inputmode="url">
+        <button type="button" class="btn small" id="fFetch" title="Найти название и картинки на странице товара">Найти картинки</button>
+      </div>
+    </div>
+    <div class="picker hidden" id="picker">
+      <div class="picker-head"><span id="pickerTitle">Картинки с сайта</span></div>
+      <div class="picker-grid" id="pickerGrid"></div>
+      <div class="picker-msg" id="pickerMsg"></div>
     </div>
     <div class="two">
       <div class="field">
@@ -341,10 +352,10 @@
       <div class="tierpick" id="fTier"></div>
     </div>
     <div class="field">
-      <label for="fImg">Картинка — ссылка, фото с устройства или вставь (Ctrl+V)</label>
+      <label for="fImg">Картинка — выбери выше, вставь ссылку, загрузи фото или Ctrl+V</label>
       <div class="img-row">
         <input id="fImg" placeholder="https://…/photo.jpg" inputmode="url">
-        <button type="button" class="btn small" id="fImgUpload">📷 Фото</button>
+        <button type="button" class="btn small" id="fImgUpload">Фото</button>
         <input type="file" id="fImgFile" accept="image/*" class="hidden">
       </div>
     </div>
@@ -360,10 +371,10 @@
       </div>
       <div class="field">
         <label for="fNote">Комментарий</label>
-        <input id="fNote" maxlength="300" placeholder="Размер S, цвет пудровый…">
+        <input id="fNote" maxlength="300" placeholder="Размер, цвет…">
       </div>
     </div>
-    <p class="hint">💡 Картинка по ссылке: открой товар, нажми правой кнопкой (или долгим тапом) на фото → «Копировать адрес изображения». Фото, загруженные с устройства, не попадают в ссылку «Поделиться» — там они заменятся смайликом.</p>
+    <p class="hint">Фото, загруженные с устройства, не попадают в ссылку «Поделиться».</p>
     <div class="foot">
       <button type="button" class="btn ghost" id="itemCancel">Отмена</button>
       <button type="submit" class="btn primary" id="itemSave">Сохранить</button>
@@ -376,7 +387,7 @@
   <div id="detailBody"></div>
   <div class="dlg" style="padding-top:0">
     <div class="foot">
-      <button class="btn small hidden" id="detailEdit">✏️ Изменить</button>
+      <button class="btn small hidden" id="detailEdit">Изменить</button>
       <button class="btn ghost small" id="detailClose">Закрыть</button>
     </div>
   </div>
@@ -385,8 +396,8 @@
 <!-- Share -->
 <dialog id="shareDlg">
   <div class="dlg">
-    <h2>💌 Поделиться вишлистом</h2>
-    <p class="hint">Отправь эту ссылку — по ней откроется твой список и тир-лист (только просмотр). Весь вишлист зашит прямо в ссылку, поэтому после изменений создай ссылку заново.</p>
+    <h2>Поделиться вишлистом</h2>
+    <p class="hint">По этой ссылке откроется список и тир-лист (только просмотр). Весь вишлист зашит прямо в ссылку, поэтому после изменений создай её заново.</p>
     <div class="share-box">
       <input id="shareUrl" readonly>
       <button class="btn primary small" id="copyShare">Копировать</button>
@@ -401,12 +412,12 @@
 <!-- More -->
 <dialog id="moreDlg">
   <div class="dlg">
-    <h2>⚙️ Ещё</h2>
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <button class="btn" id="exportBtn">⬇️ Скачать резервную копию (.json)</button>
-      <button class="btn" id="importBtn">⬆️ Загрузить из файла</button>
-      <button class="btn" id="printBtn">🖨️ Распечатать / сохранить в PDF</button>
-      <button class="btn" id="clearBtn">🗑️ Очистить вишлист</button>
+    <h2>Ещё</h2>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="btn" id="exportBtn">Скачать резервную копию (.json)</button>
+      <button class="btn" id="importBtn">Загрузить из файла</button>
+      <button class="btn" id="printBtn">Распечатать / сохранить в PDF</button>
+      <button class="btn" id="clearBtn">Очистить вишлист</button>
       <input type="file" id="importFile" accept="application/json,.json" class="hidden">
     </div>
     <div class="foot"><button class="btn ghost" id="moreClose">Закрыть</button></div>
@@ -422,11 +433,11 @@
   const $ = (id) => document.getElementById(id);
 
   const TIERS = ['S', 'A', 'B', 'C', 'D'];
-  const DEFAULT_CAPTIONS = { S: 'Мечта!', A: 'Очень хочу', B: 'Хочу', C: 'Было бы мило', D: 'Можно потом' };
+  const DEFAULT_CAPTIONS = { S: 'Мечта', A: 'Очень хочу', B: 'Хочу', C: 'Было бы мило', D: 'Можно потом' };
   const tierColor = (t) => `var(--t${t})`;
   const tierRank = (t) => (t ? 5 - TIERS.indexOf(t) : 0);
 
-  const emptyList = () => ({ title: 'Вишлист Алёны', subtitle: '', captions: { ...DEFAULT_CAPTIONS }, items: [] });
+  const emptyList = () => ({ title: 'Вишлист', subtitle: '', captions: { ...DEFAULT_CAPTIONS }, items: [] });
   let mine = load();
   let shared = null;          // list decoded from a share link
   let viewMode = false;
@@ -447,13 +458,14 @@
   }
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(mine)); }
-    catch (e) { toast('Не получилось сохранить — возможно, слишком много фото 😢'); }
+    catch (e) { toast('Не получилось сохранить — возможно, слишком много фото'); }
   }
   const LEGACY_PRIO = { 3: 'S', 2: 'A', 1: 'B' };
   function normalize(d) {
     const out = emptyList();
     if (!d || typeof d !== 'object') return out;
     out.title = String(d.title ?? out.title).slice(0, 80);
+    if (out.title === 'Вишлист Алёны') out.title = 'Вишлист';
     out.subtitle = String(d.subtitle || '').slice(0, 140);
     const caps = d.captions && typeof d.captions === 'object' ? d.captions : {};
     TIERS.forEach((t) => { if (typeof caps[t] === 'string') out.captions[t] = caps[t].slice(0, 30); });
@@ -537,6 +549,176 @@
     return unpack(JSON.parse(new TextDecoder().decode(bytes)));
   }
 
+  // ---------- product page parser ----------
+  // A static site can't read other sites directly, so pages are fetched through
+  // public CORS proxies / microlink. Wildberries images are built from the article id.
+  const withTimeout = (ms) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; };
+  async function fetchText(url, ms = 12000) {
+    const r = await fetch(url, { signal: withTimeout(ms) });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.text();
+  }
+  const PROXIES = [
+    async (u) => JSON.parse(await fetchText('https://api.allorigins.win/get?url=' + encodeURIComponent(u))).contents,
+    (u) => fetchText('https://corsproxy.io/?url=' + encodeURIComponent(u)),
+    (u) => fetchText('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u)),
+  ];
+  async function viaProxies(url) {
+    const html = await Promise.any(PROXIES.map(async (p) => {
+      const h = await p(url);
+      if (!h || h.length < 500) throw new Error('empty');
+      return h;
+    }));
+    return parseHtml(html, url);
+  }
+  async function viaMicrolink(url) {
+    const base = 'https://api.microlink.io/?url=' + encodeURIComponent(url);
+    let j;
+    try {
+      j = JSON.parse(await fetchText(base + '&data.imgs.selectorAll=img&data.imgs.attr=src', 20000));
+      if (j.status !== 'success') throw new Error(j.message);
+    } catch (e) {
+      j = JSON.parse(await fetchText(base, 20000));
+    }
+    if (j.status !== 'success') throw new Error(j.message || 'microlink');
+    const d = j.data || {};
+    const images = [d.image && d.image.url, ...(Array.isArray(d.imgs) ? d.imgs : [])]
+      .filter((s) => typeof s === 'string').map((s) => absUrl(s, url));
+    return { title: d.title || '', price: null, images };
+  }
+  function absUrl(s, base) {
+    try { return new URL(s.trim(), base).href; } catch (e) { return ''; }
+  }
+  function parseHtml(html, url) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const meta = (sel) => [...doc.querySelectorAll(sel)].map((m) => m.getAttribute('content') || m.getAttribute('href') || '').filter(Boolean);
+    const images = [
+      ...meta('meta[property="og:image"], meta[property="og:image:url"], meta[property="og:image:secure_url"]'),
+      ...meta('meta[name="twitter:image"], meta[name="twitter:image:src"], link[rel="image_src"]'),
+      ...meta('meta[itemprop="image"]'),
+    ];
+    let title = meta('meta[property="og:title"], meta[name="twitter:title"]')[0] || '';
+    let price = meta('meta[property="product:price:amount"], meta[property="og:price:amount"], meta[itemprop="price"]')[0] || null;
+    // JSON-LD Product data
+    doc.querySelectorAll('script[type="application/ld+json"]').forEach((s) => {
+      try {
+        const walk = (o) => {
+          if (!o || typeof o !== 'object') return;
+          if (Array.isArray(o)) return o.forEach(walk);
+          const type = [].concat(o['@type'] || []).join(' ');
+          if (/Product/i.test(type)) {
+            [].concat(o.image || []).forEach((im) => images.push(typeof im === 'string' ? im : im && (im.url || im.contentUrl)));
+            if (!title && o.name) title = o.name;
+            const offer = [].concat(o.offers || [])[0];
+            if (!price && offer) price = offer.price || offer.lowPrice || null;
+          }
+          if (o['@graph']) walk(o['@graph']);
+        };
+        walk(JSON.parse(s.textContent));
+      } catch (e) {}
+    });
+    doc.querySelectorAll('img').forEach((img) => {
+      const srcset = img.getAttribute('srcset') || img.getAttribute('data-srcset') || '';
+      const biggest = srcset.split(',').map((p) => p.trim().split(/\s+/)[0]).filter(Boolean).pop();
+      images.push(biggest, img.getAttribute('data-src'), img.getAttribute('data-original'), img.getAttribute('src'));
+    });
+    if (!title) title = doc.querySelector('h1')?.textContent || doc.title || '';
+    return { title: title.replace(/\s+/g, ' ').trim(), price, images: images.filter(Boolean).map((s) => absUrl(s, url)) };
+  }
+
+  // Wildberries: images live on basket-NN.wbbasket.ru; probe which basket holds this article.
+  async function wildberries(url) {
+    const m = url.match(/wildberries\.\w+\/catalog\/(\d+)/) || url.match(/wb\.ru\/catalog\/(\d+)/);
+    if (!m) throw new Error('not wb');
+    const id = +m[1], vol = Math.floor(id / 1e5), part = Math.floor(id / 1e3);
+    const path = (b, size, n) => `https://basket-${String(b).padStart(2, '0')}.wbbasket.ru/vol${vol}/part${part}/${id}/images/${size}/${n}.webp`;
+    const probe = (src) => new Promise((ok, fail) => {
+      const i = new Image(); i.onload = () => ok(src); i.onerror = fail; i.src = src;
+      setTimeout(fail, 10000);
+    });
+    const baskets = Array.from({ length: 40 }, (_, k) => k + 1);
+    const found = await Promise.any(baskets.map((b) => probe(path(b, 'c246x328', 1)).then(() => b)));
+    const images = Array.from({ length: 10 }, (_, k) => path(found, 'big', k + 1));
+    return { title: '', price: null, images };
+  }
+
+  const JUNK_IMG = /(logo|icon|sprite|favicon|avatar|placeholder|blank|pixel|spacer|loader|banner|flag|\.svg|\.gif)(\b|_|-|\.|$)/i;
+  // Keep only images that actually load and are big enough to be product photos.
+  function checkImage(src) {
+    return new Promise((ok) => {
+      const i = new Image();
+      i.referrerPolicy = 'no-referrer';
+      const t = setTimeout(() => ok(null), 8000);
+      i.onload = () => { clearTimeout(t); ok(i.naturalWidth >= 150 && i.naturalHeight >= 150 ? src : null); };
+      i.onerror = () => { clearTimeout(t); ok(null); };
+      i.src = src;
+    });
+  }
+
+  let fetchToken = 0;
+  let nameTouched = false;
+  async function findProductInfo() {
+    const url = safeUrl($('fUrl').value.trim()) || safeUrl('https://' + $('fUrl').value.trim());
+    if (!url || !hostOf(url).includes('.')) { toast('Сначала вставь ссылку на товар'); return; }
+    const token = ++fetchToken;
+    const seen = new Set();
+    const picked = [];
+    let titleFilled = false;
+    $('picker').classList.remove('hidden');
+    $('pickerGrid').innerHTML = '';
+    $('pickerTitle').textContent = 'Картинки с ' + hostOf(url);
+    $('pickerMsg').innerHTML = '<span class="spinner"></span>Ищу картинки на странице товара…';
+    $('fFetch').disabled = true;
+
+    const addImages = async (info) => {
+      if (token !== fetchToken) return;
+      // First title found wins, unless the user already typed their own name.
+      if (info.title && !titleFilled && (!nameTouched || !$('fName').value.trim())) {
+        $('fName').value = info.title.slice(0, 120);
+        titleFilled = true;
+      }
+      const p = parseFloat(String(info.price || '').replace(/\s/g, '').replace(',', '.'));
+      if (p > 0 && !$('fPrice').value) $('fPrice').value = p;
+      const candidates = info.images.filter((s) => {
+        if (!s || !/^https?:/.test(s) || JUNK_IMG.test(s) || seen.has(s)) return false;
+        seen.add(s);
+        return true;
+      });
+      await Promise.all(candidates.slice(0, 40).map(async (s) => {
+        const okSrc = await checkImage(s);
+        if (!okSrc || token !== fetchToken || picked.length >= 16) return;
+        picked.push(okSrc);
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.dataset.src = okSrc;
+        b.innerHTML = `<img src="${esc(okSrc)}" alt="" referrerpolicy="no-referrer">`;
+        b.classList.toggle('on', okSrc === currentImg());
+        $('pickerGrid').appendChild(b);
+        if (!currentImg()) selectPicked(okSrc);
+        $('pickerMsg').textContent = 'Нажми на картинку, чтобы выбрать её';
+      }));
+    };
+    const sources = [viaMicrolink(url), viaProxies(url)];
+    if (/wildberries|wb\.ru/.test(url)) sources.push(wildberries(url));
+    await Promise.allSettled(sources.map((p) => p.then(addImages)));
+    if (token !== fetchToken) return;
+    $('fFetch').disabled = false;
+    if (!picked.length) {
+      $('pickerMsg').textContent = 'Не удалось достать картинки — сайт их не отдаёт. Открой товар, нажми на фото правой кнопкой (или долгим тапом) → «Копировать адрес изображения» и вставь в поле «Картинка».';
+    }
+  }
+  function selectPicked(src) {
+    setImg(src);
+    [...$('pickerGrid').children].forEach((b) => b.classList.toggle('on', b.dataset.src === src));
+  }
+  $('pickerGrid').addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (b) selectPicked(b.dataset.src);
+  });
+  $('fFetch').addEventListener('click', findProductInfo);
+  $('fName').addEventListener('input', () => { nameTouched = true; });
+  $('fUrl').addEventListener('change', () => { if ($('fUrl').value.trim() && !$('pickerGrid').children.length) findProductInfo(); });
+
   // ---------- helpers ----------
   const current = () => (viewMode ? shared : mine);
   const emojiFor = (it) => {
@@ -544,9 +726,9 @@
     const map = [
       [/книг|book/, '📚'], [/дух|парфюм|аромат|perfum/, '🌸'], [/космет|красот|крем|помад|уход|тушь|сыворот/, '💄'],
       [/украш|кольц|серьг|колье|браслет|ювел|подвес/, '💍'], [/одежд|плать|свитер|юбк|кофт|худи|пижам/, '👗'],
-      [/обув|кросс|туфл|сапог|кед/, '👠'], [/сумк|рюкзак|кошел/, '👜'], [/цвет|букет/, '💐'],
+      [/обув|кросс|туфл|сапог|кед/, '👟'], [/сумк|рюкзак|кошел/, '👜'], [/цвет|букет/, '💐'],
       [/техн|наушник|телефон|гаджет|ноутбук|airpods|iphone|камер|фен|стайлер|dyson/, '🎧'], [/путеш|поездк|билет|отдых/, '✈️'],
-      [/игр|lego|лего|пазл/, '🧩'], [/дом|интерьер|свеч|плед|ваз/, '🕯️'], [/спорт|фитнес|йог/, '🧘‍♀️'],
+      [/игр|lego|лего|пазл/, '🧩'], [/дом|интерьер|свеч|плед|ваз/, '🕯️'], [/спорт|фитнес|йог/, '🧘'],
       [/сертификат|подарочн/, '🎟️'], [/вкусн|еда|шоколад|сладк|ресторан|кофе|чай/, '🍫'], [/игрушк|плюш|мишк/, '🧸'],
     ];
     for (const [re, e] of map) if (re.test(s)) return e;
@@ -573,10 +755,10 @@
     const sort = $('sort').value;
     const first = mine.items[0] && mine.items[0].id === it.id;
     const edit = withActions ? `
-        <button class="icon-btn" data-act="got" data-id="${it.id}" title="${it.got ? 'Вернуть в список' : 'Уже подарили'}">${it.got ? '↩️' : '✅'}</button>
-        <button class="icon-btn" data-act="up" data-id="${it.id}" title="Выше" ${sort !== 'manual' || first ? 'disabled' : ''}>⬆️</button>
-        <button class="icon-btn" data-act="edit" data-id="${it.id}" title="Изменить">✏️</button>
-        <button class="icon-btn" data-act="del" data-id="${it.id}" title="Удалить">🗑️</button>` : '';
+        <button class="icon-btn" data-act="got" data-id="${it.id}">${it.got ? 'Вернуть' : 'Подарили'}</button>
+        <button class="icon-btn" data-act="up" data-id="${it.id}" title="Выше" ${sort !== 'manual' || first ? 'disabled' : ''}>↑</button>
+        <button class="icon-btn" data-act="edit" data-id="${it.id}">Изменить</button>
+        <button class="icon-btn" data-act="del" data-id="${it.id}" title="Удалить">✕</button>` : '';
     const badge = it.tier
       ? `<span class="badge"><b style="background:${tierColor(it.tier)}">${it.tier}</b>${esc(list.captions[it.tier])}</span>`
       : '<span class="badge">без тира</span>';
@@ -585,10 +767,10 @@
         <div class="body">
           <div class="row"><h3 class="name">${esc(it.name)}</h3><span class="price">${esc(fmtPrice(it))}</span></div>
           <div class="row">${badge}${it.cat ? `<span class="cat">${esc(it.cat)}</span>` : ''}</div>
-          ${it.got ? '<p class="note">🎉 Уже подарили</p>' : ''}
+          ${it.got ? '<p class="note">Уже подарили</p>' : ''}
           ${it.note ? `<p class="note">${esc(it.note)}</p>` : ''}
           <div class="actions">
-            ${it.url ? `<a class="btn small" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">🔗 ${esc(hostOf(it.url) || 'Где купить')}</a>` : ''}
+            ${it.url ? `<a class="btn small" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${esc(hostOf(it.url) || 'Где купить')} ↗</a>` : ''}
             ${edit}
           </div>
         </div>
@@ -598,7 +780,7 @@
   // ---------- rendering ----------
   function render() {
     const list = current();
-    document.title = (list.title || 'Вишлист Алёны') + ' 🎀';
+    document.title = list.title || 'Вишлист';
     document.body.classList.toggle('edit', !viewMode);
 
     // header
@@ -659,7 +841,7 @@
 
   function renderTiers(list, visible) {
     const tile = (it) => `<div class="tile ${it.got ? 'got' : ''}" data-id="${it.id}" title="${esc(it.name)}">
-        <div class="pic">${picHTML(it)}</div><div class="cap">${it.got ? '🎉 ' : ''}${esc(it.name)}</div></div>`;
+        <div class="pic">${picHTML(it)}</div><div class="cap">${esc(it.name)}</div></div>`;
     const rows = TIERS.map((t) => {
       const items = visible.filter((i) => i.tier === t);
       if (viewMode && !items.length) return '';
@@ -674,7 +856,7 @@
     const pool = visible.filter((i) => !i.tier);
     if (!viewMode || pool.length) {
       rows.push(`<div class="tier pool">
-        <div class="tier-label"><div class="letter">📥</div><span>Ещё не разложено</span></div>
+        <div class="tier-label"><div class="letter">Без тира</div></div>
         <div class="tier-drop" data-tier="">${pool.length ? pool.map(tile).join('') : '<span class="placeholder">Новые желания появляются здесь — перетащи их на нужный уровень</span>'}</div>
       </div>`);
     }
@@ -711,11 +893,12 @@
     $('qInput').value = '';
     if (url && !text) {
       openEditor(null, { url, name: guessName(url) });
+      findProductInfo();
       return;
     }
     mine.items.push(blankItem({ name: text.slice(0, 120), url }));
     save(); render();
-    toast(view === 'tiers' ? 'Добавлено 💗 Перетащи его на нужный уровень' : 'Добавлено 💗');
+    toast(view === 'tiers' ? 'Добавлено. Перетащи на нужный уровень' : 'Добавлено');
   });
   function blankItem(over) {
     return {
@@ -736,7 +919,7 @@
   }
   function setImg(src) {
     $('fImg').dataset.data = src.startsWith('data:') ? src : '';
-    $('fImg').value = src.startsWith('data:') ? '📷 фото с устройства' : src;
+    $('fImg').value = src.startsWith('data:') ? 'фото с устройства' : src;
     updatePreview();
   }
   function currentImg() {
@@ -749,19 +932,19 @@
   }
   $('fImgPreview').addEventListener('error', () => { $('previewWrap').style.display = 'none'; });
   $('fImg').addEventListener('input', () => { $('fImg').dataset.data = ''; updatePreview(); });
-  $('fImgClear').addEventListener('click', () => setImg(''));
+  $('fImgClear').addEventListener('click', () => selectPicked(''));
   $('fImgUpload').addEventListener('click', () => $('fImgFile').click());
   $('fImgFile').addEventListener('change', async (e) => {
     const f = e.target.files[0];
     e.target.value = '';
-    if (f) setImg(await shrinkImage(f));
+    if (f) selectPicked(await shrinkImage(f));
   });
   $('itemDlg').addEventListener('paste', async (e) => {
     const file = [...(e.clipboardData?.files || [])].find((f) => f.type.startsWith('image/'));
     if (!file) return;
     e.preventDefault();
-    setImg(await shrinkImage(file));
-    toast('Картинка вставлена 📷');
+    selectPicked(await shrinkImage(file));
+    toast('Картинка вставлена');
   });
   // Downscale photos so many of them fit in browser storage.
   function shrinkImage(file) {
@@ -782,6 +965,11 @@
 
   function openEditor(id, preset) {
     editingId = id || null;
+    fetchToken++;
+    nameTouched = !!id;
+    $('fFetch').disabled = false;
+    $('picker').classList.add('hidden');
+    $('pickerGrid').innerHTML = '';
     const it = id ? mine.items.find((i) => i.id === id) : blankItem(preset);
     $('itemDlgTitle').textContent = id ? 'Изменить желание' : 'Новое желание';
     $('fName').value = it.name;
@@ -796,6 +984,7 @@
     $('fName').focus();
     $('fName').select();
   }
+  $('itemDlg').addEventListener('close', () => { fetchToken++; });
   $('fTier').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setTier(b.dataset.v); });
   $('itemCancel').addEventListener('click', () => $('itemDlg').close());
   $('itemForm').addEventListener('submit', (e) => {
@@ -816,10 +1005,10 @@
     };
     if (editingId) {
       Object.assign(mine.items.find((i) => i.id === editingId), data);
-      toast('Сохранено ✨');
+      toast('Сохранено');
     } else {
       mine.items.push(blankItem(data));
-      toast('Желание добавлено 💗');
+      toast('Желание добавлено');
     }
     save(); render();
     $('itemDlg').close();
@@ -865,7 +1054,7 @@
     if (b) { view = b.dataset.view; writePref(VIEW_KEY, view); render(); }
   });
   $('sort').addEventListener('change', render);
-  $('title').addEventListener('input', () => { mine.title = $('title').value; save(); document.title = (mine.title || 'Вишлист Алёны') + ' 🎀'; });
+  $('title').addEventListener('input', () => { mine.title = $('title').value; save(); document.title = mine.title || 'Вишлист'; });
   $('subtitle').addEventListener('input', () => { mine.subtitle = $('subtitle').value; save(); });
   $('tiers').addEventListener('input', (e) => {
     const t = e.target.dataset.caption;
@@ -961,10 +1150,10 @@
   $('copyShare').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText($('shareUrl').value); }
     catch (e) { $('shareUrl').select(); document.execCommand('copy'); }
-    toast('Ссылка скопирована 💌');
+    toast('Ссылка скопирована');
   });
   $('nativeShare').addEventListener('click', () => {
-    navigator.share({ title: mine.title || 'Вишлист Алёны', text: 'Мой вишлист 🎀', url: $('shareUrl').value }).catch(() => {});
+    navigator.share({ title: mine.title || 'Вишлист', url: $('shareUrl').value }).catch(() => {});
   });
   $('shareClose').addEventListener('click', () => $('shareDlg').close());
 
@@ -973,7 +1162,7 @@
     const m = location.hash.match(/^#v=(.+)$/);
     if (m) {
       try { shared = await decode(m[1]); viewMode = true; }
-      catch (e) { toast('Ссылка повреждена 😢'); viewMode = false; history.replaceState(null, '', location.pathname); }
+      catch (e) { toast('Ссылка повреждена'); viewMode = false; history.replaceState(null, '', location.pathname); }
     } else {
       viewMode = false; shared = null;
     }
@@ -987,7 +1176,7 @@
     save();
     history.replaceState(null, '', location.pathname);
     route();
-    toast('Теперь это твой вишлист ✨');
+    toast('Теперь это твой вишлист');
   });
   window.addEventListener('hashchange', route);
 
@@ -1009,7 +1198,7 @@
     try {
       const data = normalize(JSON.parse(await f.text()));
       if (mine.items.length && !confirm('Заменить текущий вишлист данными из файла?')) return;
-      mine = data; save(); render(); $('moreDlg').close(); toast('Загружено ✨');
+      mine = data; save(); render(); $('moreDlg').close(); toast('Загружено');
     } catch (err) { toast('Не удалось прочитать файл'); }
     e.target.value = '';
   });
@@ -1026,11 +1215,11 @@
 })();
 </script>
 <style media="print">
-  #editTop, .tabs, .filters, .sort, .banner, .actions, footer, .bow, .tier-help, .tier.pool { display: none !important; }
+  #editTop, .tabs, .filters, .sort, .banner, .actions, footer, .tier-help, .tier.pool { display: none !important; }
   body { background: #fff; color: #000; }
   .card, .tiers { box-shadow: none; break-inside: avoid; }
   .grid { grid-template-columns: repeat(3, 1fr); }
-  .tier-label, .tierpick button { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tier-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 </style>
 </body>
 </html>
