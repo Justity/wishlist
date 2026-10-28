@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мой вишлист</title>
+<meta name="description" content="Простой и красивый вишлист: добавляй желания и делись ссылкой">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff6f8;
+    --bg2: #ffe9ef;
+    --card: #ffffff;
+    --text: #3b2a33;
+    --muted: #8c7380;
+    --accent: #e75a8a;
+    --accent-2: #c94477;
+    --accent-soft: #ffd9e5;
+    --border: #f3d3de;
+    --shadow: 0 6px 24px rgba(201, 68, 119, .10);
+    --radius: 18px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1d1519;
+      --bg2: #2a1d23;
+      --card: #2b2026;
+      --text: #f6e9ee;
+      --muted: #b89dab;
+      --accent: #ff7aa6;
+      --accent-2: #ff9bbd;
+      --accent-soft: #4a2a37;
+      --border: #44323b;
+      --shadow: 0 6px 24px rgba(0, 0, 0, .35);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--text);
+    background: radial-gradient(1200px 600px at 10% -10%, var(--bg2), transparent 60%),
+                radial-gradient(900px 500px at 110% 10%, var(--bg2), transparent 60%),
+                var(--bg);
+    min-height: 100vh;
+    line-height: 1.45;
+  }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  a { color: var(--accent-2); }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 80px; }
+
+  header.hero { text-align: center; padding: 18px 0 10px; }
+  .hero .bow { font-size: 44px; line-height: 1; }
+  .title-input, .hero h1 {
+    font-family: "Playfair Display", Georgia, serif; font-style: italic;
+    font-size: clamp(30px, 6vw, 46px); font-weight: 600;
+    margin: 8px 0 4px; text-align: center; border: none; background: transparent;
+    width: 100%; outline: none; color: var(--text);
+  }
+  .subtitle-input, .hero p.sub {
+    text-align: center; color: var(--muted); border: none; background: transparent;
+    width: 100%; outline: none; margin: 0; font-size: 16px;
+  }
+  .title-input:focus, .subtitle-input:focus { background: var(--accent-soft); border-radius: 12px; }
+
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center;
+    margin: 22px 0 18px;
+  }
+  .btn {
+    border: 1px solid var(--border); background: var(--card); padding: 10px 16px;
+    border-radius: 999px; cursor: pointer; font-weight: 700; display: inline-flex;
+    gap: 8px; align-items: center; box-shadow: var(--shadow); transition: transform .12s, background .12s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-2); }
+  .btn.ghost { box-shadow: none; background: transparent; }
+  .btn.small { padding: 6px 12px; font-size: 14px; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 18px; }
+  .chip {
+    border: 1px solid var(--border); background: var(--card); padding: 6px 14px; border-radius: 999px;
+    cursor: pointer; font-size: 14px; font-weight: 600; color: var(--muted);
+  }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .sort { display: flex; justify-content: center; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+  .sort select { border: 1px solid var(--border); background: var(--card); border-radius: 10px; padding: 4px 8px; }
+
+  .stats { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    position: relative; transition: transform .15s;
+  }
+  .card:hover { transform: translateY(-2px); }
+  .card.got { opacity: .55; }
+  .card.got .name { text-decoration: line-through; }
+  .thumb {
+    aspect-ratio: 16 / 10; background: var(--accent-soft); display: grid; place-items: center;
+    font-size: 54px; overflow: hidden;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .name { font-weight: 800; font-size: 17px; margin: 0; word-break: break-word; }
+  .price { font-weight: 800; color: var(--accent-2); white-space: nowrap; }
+  .hearts { letter-spacing: 1px; font-size: 14px; }
+  .cat { font-size: 12px; font-weight: 700; color: var(--muted); background: var(--bg2); padding: 2px 10px; border-radius: 999px; }
+  .note { color: var(--muted); font-size: 14px; margin: 0; white-space: pre-wrap; word-break: break-word; }
+  .card .actions { display: flex; gap: 6px; margin-top: auto; padding-top: 8px; flex-wrap: wrap; }
+  .icon-btn {
+    border: 1px solid var(--border); background: transparent; border-radius: 10px; padding: 6px 9px;
+    cursor: pointer; font-size: 14px; line-height: 1;
+  }
+  .icon-btn:hover { background: var(--accent-soft); }
+  .link-btn { text-decoration: none; font-weight: 700; font-size: 14px; }
+
+  .empty { text-align: center; color: var(--muted); padding: 50px 16px; border: 2px dashed var(--border); border-radius: var(--radius); }
+  .empty .big { font-size: 56px; }
+
+  dialog {
+    border: none; border-radius: 22px; padding: 0; width: min(560px, calc(100% - 32px));
+    background: var(--card); color: var(--text); box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  }
+  dialog::backdrop { background: rgba(40, 10, 25, .45); backdrop-filter: blur(3px); }
+  .dlg { padding: 22px; }
+  .dlg h2 { margin: 0 0 14px; font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 600; }
+  .field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .field label { font-size: 13px; font-weight: 700; color: var(--muted); }
+  .field input, .field textarea, .field select {
+    border: 1px solid var(--border); background: var(--bg); border-radius: 12px; padding: 10px 12px; outline: none; width: 100%;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 480px) { .two { grid-template-columns: 1fr; } }
+  .prio { display: flex; gap: 6px; }
+  .prio button {
+    flex: 1; border: 1px solid var(--border); background: var(--bg); border-radius: 12px; padding: 8px; cursor: pointer; font-size: 13px; font-weight: 700;
+  }
+  .prio button.on { background: var(--accent-soft); border-color: var(--accent); }
+  .dlg .foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; }
+  .preview-img { width: 100%; max-height: 160px; object-fit: contain; border-radius: 12px; margin-top: 6px; display: none; background: var(--bg2); }
+  .share-box { display: flex; gap: 8px; }
+  .share-box input { flex: 1; min-width: 0; }
+  .hint { font-size: 13px; color: var(--muted); }
+
+  .banner {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 16px;
+    display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    box-shadow: var(--shadow); margin: 16px 0;
+  }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+    background: var(--text); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-weight: 700;
+    opacity: 0; pointer-events: none; transition: all .25s; z-index: 50; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 40px; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="bow">🎀</div>
+    <input id="title" class="title-input" maxlength="80" placeholder="Мой вишлист" aria-label="Название вишлиста">
+    <input id="subtitle" class="subtitle-input" maxlength="140" placeholder="Нажми, чтобы добавить подпись — например, «на день рождения 14 марта»" aria-label="Подпись">
+    <h1 id="viewTitle" class="hidden"></h1>
+    <p id="viewSubtitle" class="sub hidden"></p>
+  </header>
+
+  <div id="viewBanner" class="banner hidden">
+    <span>👀 Это вишлист, которым с тобой поделились.</span>
+    <span style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn small" id="copyToMine">Сохранить себе и редактировать</button>
+      <button class="btn small ghost" id="openMine">Мой вишлист</button>
+    </span>
+  </div>
+
+  <div class="toolbar" id="editToolbar">
+    <button class="btn primary" id="addBtn">＋ Добавить желание</button>
+    <button class="btn" id="shareBtn">💌 Поделиться</button>
+    <button class="btn" id="moreBtn">⚙️ Ещё</button>
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="sort">
+    <span>Сортировка:</span>
+    <select id="sort">
+      <option value="manual">как добавлено</option>
+      <option value="prio">сначала самое желанное</option>
+      <option value="priceAsc">дешевле → дороже</option>
+      <option value="priceDesc">дороже → дешевле</option>
+    </select>
+  </div>
+  <div class="stats" id="stats"></div>
+
+  <div class="grid" id="grid"></div>
+  <div class="empty hidden" id="empty">
+    <div class="big">🧸</div>
+    <p><b>Пока здесь пусто</b><br>Добавь первое желание — это займёт полминуты</p>
+    <button class="btn primary" id="emptyAdd">＋ Добавить желание</button>
+  </div>
+
+  <footer>Сделано с любовью 💗 · данные хранятся только в твоём браузере</footer>
+</div>
+
+<!-- Item editor -->
+<dialog id="itemDlg">
+  <form class="dlg" id="itemForm" method="dialog">
+    <h2 id="itemDlgTitle">Новое желание</h2>
+    <div class="field">
+      <label for="fName">Что хочется? *</label>
+      <input id="fName" required maxlength="120" placeholder="Например, духи Chanel Chance">
+    </div>
+    <div class="field">
+      <label for="fUrl">Ссылка на товар</label>
+      <input id="fUrl" type="url" placeholder="https://…">
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="fPrice">Примерная цена</label>
+        <input id="fPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="5000">
+      </div>
+      <div class="field">
+        <label for="fCurrency">Валюта</label>
+        <select id="fCurrency">
+          <option>₽</option><option>$</option><option>€</option><option>₸</option><option>₴</option><option>Br</option><option>£</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Насколько хочется</label>
+      <div class="prio" id="fPrio">
+        <button type="button" data-v="1">🤍 Было бы мило</button>
+        <button type="button" data-v="2">💗 Очень хочу</button>
+        <button type="button" data-v="3">💖 Мечта!</button>
+      </div>
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="fCat">Категория</label>
+        <input id="fCat" list="catList" maxlength="40" placeholder="Красота, Книги…">
+        <datalist id="catList"></datalist>
+      </div>
+      <div class="field">
+        <label for="fImg">Картинка (ссылка)</label>
+        <input id="fImg" type="url" placeholder="https://…/photo.jpg">
+      </div>
+    </div>
+    <img id="fImgPreview" class="preview-img" alt="">
+    <div class="field">
+      <label for="fNote">Комментарий</label>
+      <textarea id="fNote" maxlength="500" placeholder="Размер S, цвет пудровый, можно любой бренд…"></textarea>
+    </div>
+    <p class="hint">💡 Чтобы взять картинку: открой товар, нажми правой кнопкой (или долгим тапом) на фото → «Копировать адрес изображения».</p>
+    <div class="foot">
+      <button type="button" class="btn ghost" id="itemCancel">Отмена</button>
+      <button type="submit" class="btn primary" id="itemSave">Сохранить</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Share -->
+<dialog id="shareDlg">
+  <div class="dlg">
+    <h2>💌 Поделиться вишлистом</h2>
+    <p class="hint">Отправь эту ссылку — по ней откроется твой список (только просмотр). Весь вишлист зашит прямо в ссылку, так что после изменений создай ссылку заново.</p>
+    <div class="share-box">
+      <input id="shareUrl" readonly>
+      <button class="btn primary small" id="copyShare">Копировать</button>
+    </div>
+    <div class="foot">
+      <button class="btn small hidden" id="nativeShare">Отправить…</button>
+      <button class="btn ghost" id="shareClose">Готово</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- More -->
+<dialog id="moreDlg">
+  <div class="dlg">
+    <h2>⚙️ Ещё</h2>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn" id="exportBtn">⬇️ Скачать резервную копию (.json)</button>
+      <button class="btn" id="importBtn">⬆️ Загрузить из файла</button>
+      <button class="btn" id="printBtn">🖨️ Распечатать / сохранить в PDF</button>
+      <button class="btn" id="clearBtn">🗑️ Очистить вишлист</button>
+      <input type="file" id="importFile" accept="application/json,.json" class="hidden">
+    </div>
+    <div class="foot"><button class="btn ghost" id="moreClose">Закрыть</button></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'wishlist.v1';
+  const $ = (id) => document.getElementById(id);
+
+  const emptyList = () => ({ title: '', subtitle: '', items: [] });
+  let mine = load();
+  let shared = null;          // list decoded from a share link
+  let viewMode = false;
+  let filter = 'Все';
+  let editingId = null;
+  let prioValue = 2;
+
+  // ---------- storage ----------
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return normalize(JSON.parse(raw));
+    } catch (e) {}
+    return emptyList();
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(mine)); }
+    catch (e) { toast('Не получилось сохранить в браузере 😢'); }
+  }
+  function normalize(d) {
+    const out = emptyList();
+    if (!d || typeof d !== 'object') return out;
+    out.title = String(d.title || '').slice(0, 80);
+    out.subtitle = String(d.subtitle || '').slice(0, 140);
+    out.items = Array.isArray(d.items) ? d.items.map((it) => ({
+      id: String(it.id || uid()),
+      name: String(it.name || '').slice(0, 120),
+      url: safeUrl(it.url),
+      price: it.price === '' || it.price == null || isNaN(+it.price) ? null : +it.price,
+      currency: String(it.currency || '₽').slice(0, 4),
+      prio: [1, 2, 3].includes(+it.prio) ? +it.prio : 2,
+      cat: String(it.cat || '').slice(0, 40),
+      img: safeUrl(it.img),
+      note: String(it.note || '').slice(0, 500),
+      got: !!it.got,
+    })).filter((it) => it.name) : [];
+    return out;
+  }
+  function safeUrl(u) {
+    if (!u) return '';
+    try {
+      const url = new URL(String(u));
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+    } catch (e) { return ''; }
+  }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  // ---------- share link encoding ----------
+  // Compact keys keep share links short.
+  function pack(list) {
+    return {
+      t: list.title, s: list.subtitle,
+      i: list.items.map((it) => [it.name, it.url, it.price, it.currency, it.prio, it.cat, it.img, it.note, it.got ? 1 : 0]),
+    };
+  }
+  function unpack(p) {
+    return normalize({
+      title: p.t, subtitle: p.s,
+      items: (p.i || []).map((a) => ({ name: a[0], url: a[1], price: a[2], currency: a[3], prio: a[4], cat: a[5], img: a[6], note: a[7], got: a[8] })),
+    });
+  }
+  const b64url = (bytes) => {
+    let s = '';
+    for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  };
+  const unb64url = (str) => {
+    const s = atob(str.replace(/-/g, '+').replace(/_/g, '/'));
+    const b = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i);
+    return b;
+  };
+  async function streamBytes(bytes, stream) {
+    const res = new Response(new Blob([bytes]).stream().pipeThrough(stream));
+    return new Uint8Array(await res.arrayBuffer());
+  }
+  async function encode(list) {
+    const bytes = new TextEncoder().encode(JSON.stringify(pack(list)));
+    if ('CompressionStream' in window) {
+      try { return 'z' + b64url(await streamBytes(bytes, new CompressionStream('deflate-raw'))); } catch (e) {}
+    }
+    return 'j' + b64url(bytes);
+  }
+  async function decode(str) {
+    const kind = str[0];
+    let bytes = unb64url(str.slice(1));
+    if (kind === 'z') bytes = await streamBytes(bytes, new DecompressionStream('deflate-raw'));
+    else if (kind !== 'j') throw new Error('bad format');
+    return unpack(JSON.parse(new TextDecoder().decode(bytes)));
+  }
+
+  // ---------- rendering ----------
+  const current = () => (viewMode ? shared : mine);
+  const hearts = (p) => '💖'.repeat(p) + '<span style="opacity:.25">' + '💖'.repeat(3 - p) + '</span>';
+  const prioLabel = { 1: 'Было бы мило', 2: 'Очень хочу', 3: 'Мечта!' };
+  const emojiFor = (it) => {
+    const s = (it.cat + ' ' + it.name).toLowerCase();
+    const map = [
+      [/книг|book/, '📚'], [/дух|парфюм|аромат/, '🌸'], [/космет|красот|крем|помад|уход/, '💄'],
+      [/украш|кольц|серьг|колье|браслет|ювел/, '💍'], [/одежд|плать|свитер|юбк|кофт/, '👗'],
+      [/обув|кросс|туфл|сапог|кед/, '👠'], [/сумк|рюкзак/, '👜'], [/цвет|букет/, '💐'],
+      [/техн|наушник|телефон|гаджет|ноутбук|airpods|iphone/, '🎧'], [/путеш|поездк|билет|отдых/, '✈️'],
+      [/игр|lego|лего/, '🧩'], [/дом|интерьер|свеч|плед/, '🕯️'], [/спорт|фитнес|йог/, '🧘‍♀️'],
+      [/сертификат|подарочн/, '🎟️'], [/вкусн|еда|шоколад|сладк|ресторан/, '🍫'],
+    ];
+    for (const [re, e] of map) if (re.test(s)) return e;
+    return '🎁';
+  };
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmtPrice = (it) => it.price == null ? '' : it.price.toLocaleString('ru-RU', { maximumFractionDigits: 2 }) + ' ' + it.currency;
+
+  function render() {
+    const list = current();
+    document.title = (list.title || 'Мой вишлист') + ' 🎀';
+
+    // header
+    $('title').classList.toggle('hidden', viewMode);
+    $('subtitle').classList.toggle('hidden', viewMode);
+    $('viewTitle').classList.toggle('hidden', !viewMode);
+    $('viewSubtitle').classList.toggle('hidden', !viewMode || !list.subtitle);
+    $('editToolbar').classList.toggle('hidden', viewMode);
+    $('viewBanner').classList.toggle('hidden', !viewMode);
+    if (viewMode) {
+      $('viewTitle').textContent = list.title || 'Вишлист';
+      $('viewSubtitle').textContent = list.subtitle;
+    } else {
+      if (document.activeElement !== $('title')) $('title').value = list.title;
+      if (document.activeElement !== $('subtitle')) $('subtitle').value = list.subtitle;
+    }
+
+    // categories
+    const cats = [...new Set(list.items.map((i) => i.cat).filter(Boolean))];
+    if (filter !== 'Все' && !cats.includes(filter)) filter = 'Все';
+    $('filters').innerHTML = cats.length ? ['Все', ...cats].map((c) =>
+      `<button class="chip ${c === filter ? 'active' : ''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('') : '';
+    $('catList').innerHTML = cats.map((c) => `<option value="${esc(c)}">`).join('');
+
+    // items
+    let items = list.items.filter((i) => filter === 'Все' || i.cat === filter);
+    const sort = $('sort').value;
+    const priceOf = (i, dflt) => (i.price == null ? dflt : i.price);
+    if (sort === 'prio') items = [...items].sort((a, b) => b.prio - a.prio);
+    if (sort === 'priceAsc') items = [...items].sort((a, b) => priceOf(a, Infinity) - priceOf(b, Infinity));
+    if (sort === 'priceDesc') items = [...items].sort((a, b) => priceOf(b, -1) - priceOf(a, -1));
+    items.sort((a, b) => a.got - b.got); // stable: received gifts go last
+
+    $('empty').classList.toggle('hidden', list.items.length > 0);
+    $('emptyAdd').classList.toggle('hidden', viewMode);
+    $('sort').parentElement.classList.toggle('hidden', list.items.length < 2);
+
+    const total = list.items.filter((i) => !i.got && i.price != null);
+    const sums = {};
+    total.forEach((i) => { sums[i.currency] = (sums[i.currency] || 0) + i.price; });
+    const sumStr = Object.entries(sums).map(([c, v]) => v.toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + ' ' + c).join(' + ');
+    $('stats').textContent = list.items.length
+      ? `${list.items.length} ${plural(list.items.length, ['желание', 'желания', 'желаний'])}` + (sumStr ? ` · примерно ${sumStr}` : '')
+      : '';
+
+    const idx = (id) => mine.items.findIndex((i) => i.id === id);
+    $('grid').innerHTML = items.map((it) => {
+      const thumb = it.img
+        ? `<img src="${esc(it.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(document.createTextNode('${emojiFor(it)}'))">`
+        : emojiFor(it);
+      const edit = viewMode ? '' : `
+        <button class="icon-btn" data-act="got" data-id="${it.id}" title="${it.got ? 'Вернуть в список' : 'Уже подарили'}">${it.got ? '↩️' : '✅'}</button>
+        <button class="icon-btn" data-act="up" data-id="${it.id}" title="Выше" ${sort !== 'manual' || idx(it.id) === 0 ? 'disabled style="opacity:.35"' : ''}>⬆️</button>
+        <button class="icon-btn" data-act="edit" data-id="${it.id}" title="Изменить">✏️</button>
+        <button class="icon-btn" data-act="del" data-id="${it.id}" title="Удалить">🗑️</button>`;
+      return `<article class="card ${it.got ? 'got' : ''}">
+        <div class="thumb">${thumb}</div>
+        <div class="body">
+          <div class="row"><h3 class="name">${esc(it.name)}</h3><span class="price">${esc(fmtPrice(it))}</span></div>
+          <div class="row"><span class="hearts" title="${prioLabel[it.prio]}">${hearts(it.prio)}</span>${it.cat ? `<span class="cat">${esc(it.cat)}</span>` : ''}</div>
+          ${it.got ? '<p class="note">🎉 Уже подарили</p>' : ''}
+          ${it.note ? `<p class="note">${esc(it.note)}</p>` : ''}
+          <div class="actions">
+            ${it.url ? `<a class="btn small link-btn" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">🔗 Где купить</a>` : ''}
+            ${edit}
+          </div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+  function plural(n, f) {
+    const m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return f[0];
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return f[1];
+    return f[2];
+  }
+
+  // ---------- toast ----------
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // ---------- item editor ----------
+  function setPrio(v) {
+    prioValue = v;
+    [...$('fPrio').children].forEach((b) => b.classList.toggle('on', +b.dataset.v === v));
+  }
+  function updatePreview() {
+    const url = safeUrl($('fImg').value.trim());
+    const img = $('fImgPreview');
+    if (url) { img.src = url; img.style.display = 'block'; } else { img.removeAttribute('src'); img.style.display = 'none'; }
+  }
+  $('fImgPreview').addEventListener('error', () => { $('fImgPreview').style.display = 'none'; });
+  function openEditor(id) {
+    editingId = id || null;
+    const it = id ? mine.items.find((i) => i.id === id) : null;
+    $('itemDlgTitle').textContent = it ? 'Изменить желание' : 'Новое желание';
+    $('fName').value = it ? it.name : '';
+    $('fUrl').value = it ? it.url : '';
+    $('fPrice').value = it && it.price != null ? it.price : '';
+    $('fCurrency').value = it ? it.currency : (mine.items.at(-1)?.currency || '₽');
+    $('fCat').value = it ? it.cat : (filter !== 'Все' ? filter : '');
+    $('fImg').value = it ? it.img : '';
+    $('fNote').value = it ? it.note : '';
+    setPrio(it ? it.prio : 2);
+    updatePreview();
+    $('itemDlg').showModal();
+    $('fName').focus();
+  }
+  $('fPrio').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setPrio(+b.dataset.v); });
+  $('fImg').addEventListener('input', updatePreview);
+  $('itemCancel').addEventListener('click', () => $('itemDlg').close());
+  $('itemForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = $('fName').value.trim();
+    if (!name) { $('fName').focus(); return; }
+    const rawUrl = $('fUrl').value.trim(), rawImg = $('fImg').value.trim();
+    const url = safeUrl(rawUrl) || (rawUrl && safeUrl('https://' + rawUrl));
+    const img = safeUrl(rawImg);
+    const priceStr = $('fPrice').value.trim();
+    const data = {
+      name, url: url || '', img,
+      price: priceStr === '' ? null : Math.max(0, +priceStr),
+      currency: $('fCurrency').value,
+      prio: prioValue,
+      cat: $('fCat').value.trim().slice(0, 40),
+      note: $('fNote').value.trim(),
+    };
+    if (editingId) {
+      Object.assign(mine.items.find((i) => i.id === editingId), data);
+      toast('Сохранено ✨');
+    } else {
+      mine.items.push({ id: uid(), got: false, ...data });
+      toast('Желание добавлено 💗');
+    }
+    save(); render();
+    $('itemDlg').close();
+  });
+
+  // ---------- list actions ----------
+  $('addBtn').addEventListener('click', () => openEditor());
+  $('emptyAdd').addEventListener('click', () => openEditor());
+  $('grid').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]');
+    if (!b || viewMode) return;
+    const i = mine.items.findIndex((x) => x.id === b.dataset.id);
+    if (i < 0) return;
+    const act = b.dataset.act;
+    if (act === 'edit') return openEditor(b.dataset.id);
+    if (act === 'del') {
+      if (!confirm(`Удалить «${mine.items[i].name}»?`)) return;
+      mine.items.splice(i, 1);
+    }
+    if (act === 'got') mine.items[i].got = !mine.items[i].got;
+    if (act === 'up' && i > 0) [mine.items[i - 1], mine.items[i]] = [mine.items[i], mine.items[i - 1]];
+    save(); render();
+  });
+  $('filters').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-cat]');
+    if (c) { filter = c.dataset.cat; render(); }
+  });
+  $('sort').addEventListener('change', render);
+  $('title').addEventListener('input', () => { mine.title = $('title').value; save(); document.title = (mine.title || 'Мой вишлист') + ' 🎀'; });
+  $('subtitle').addEventListener('input', () => { mine.subtitle = $('subtitle').value; save(); });
+
+  // ---------- share ----------
+  $('shareBtn').addEventListener('click', async () => {
+    if (!mine.items.length) { toast('Сначала добавь хотя бы одно желание'); return; }
+    const code = await encode(mine);
+    const url = location.href.split('#')[0] + '#v=' + code;
+    $('shareUrl').value = url;
+    $('nativeShare').classList.toggle('hidden', !navigator.share);
+    $('shareDlg').showModal();
+    $('shareUrl').select();
+  });
+  $('copyShare').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('shareUrl').value); }
+    catch (e) { $('shareUrl').select(); document.execCommand('copy'); }
+    toast('Ссылка скопирована 💌');
+  });
+  $('nativeShare').addEventListener('click', () => {
+    navigator.share({ title: mine.title || 'Мой вишлист', text: 'Мой вишлист 🎀', url: $('shareUrl').value }).catch(() => {});
+  });
+  $('shareClose').addEventListener('click', () => $('shareDlg').close());
+
+  // ---------- view mode ----------
+  async function route() {
+    const m = location.hash.match(/^#v=(.+)$/);
+    if (m) {
+      try { shared = await decode(m[1]); viewMode = true; }
+      catch (e) { toast('Ссылка повреждена 😢'); viewMode = false; history.replaceState(null, '', location.pathname); }
+    } else {
+      viewMode = false; shared = null;
+    }
+    filter = 'Все';
+    render();
+  }
+  $('openMine').addEventListener('click', () => { location.hash = ''; history.replaceState(null, '', location.pathname); route(); });
+  $('copyToMine').addEventListener('click', () => {
+    if (mine.items.length && !confirm('Заменить твой текущий вишлист этим?')) return;
+    mine = normalize(JSON.parse(JSON.stringify(shared)));
+    save();
+    history.replaceState(null, '', location.pathname);
+    route();
+    toast('Теперь это твой вишлист ✨');
+  });
+  window.addEventListener('hashchange', route);
+
+  // ---------- more ----------
+  $('moreBtn').addEventListener('click', () => $('moreDlg').showModal());
+  $('moreClose').addEventListener('click', () => $('moreDlg').close());
+  $('exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(mine, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'wishlist.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $('importBtn').addEventListener('click', () => $('importFile').click());
+  $('importFile').addEventListener('change', async (e) => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      const data = normalize(JSON.parse(await f.text()));
+      if (mine.items.length && !confirm('Заменить текущий вишлист данными из файла?')) return;
+      mine = data; save(); render(); $('moreDlg').close(); toast('Загружено ✨');
+    } catch (err) { toast('Не удалось прочитать файл'); }
+    e.target.value = '';
+  });
+  $('printBtn').addEventListener('click', () => { $('moreDlg').close(); setTimeout(() => window.print(), 100); });
+  $('clearBtn').addEventListener('click', () => {
+    if (!confirm('Точно удалить все желания? Это нельзя отменить.')) return;
+    mine = emptyList(); save(); render(); $('moreDlg').close();
+  });
+
+  // Keep tabs in sync
+  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) { mine = load(); render(); } });
+
+  route();
+})();
+</script>
+<style media="print">
+  .toolbar, .filters, .sort, .banner, .actions, footer, .bow { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card { box-shadow: none; break-inside: avoid; }
+  .grid { grid-template-columns: repeat(3, 1fr); }
+</style>
+</body>
+</html>
