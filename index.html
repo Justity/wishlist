@@ -252,6 +252,31 @@
     opacity: 0; pointer-events: none; transition: all .25s; z-index: 150; max-width: calc(100% - 32px); text-align: center;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast.actionable { pointer-events: auto; }
+  .toast-btn {
+    margin-left: 12px; background: none; border: none; color: inherit; font-weight: 700;
+    text-decoration: underline; cursor: pointer; padding: 0;
+  }
+  #trash {
+    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140px); z-index: 90;
+    padding: 16px 28px; border-radius: 12px; background: var(--card); border: 2px dashed #c0504d;
+    color: #c0504d; font-weight: 600; font-size: 14px; transition: transform .2s, background .12s;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12); white-space: nowrap;
+  }
+  #trash.show { transform: translate(-50%, 0); }
+  #trash.over { background: #c0504d; color: #fff; border-style: solid; }
+  .btn.danger { color: #c0504d; }
+  .btn.danger:hover { border-color: #c0504d; }
+  .foot .spacer { flex: 1; }
+  .bm-link {
+    display: inline-flex; padding: 10px 18px; border-radius: 10px; background: var(--accent); color: var(--on-accent);
+    font-weight: 600; text-decoration: none; cursor: grab; margin: 4px 0 12px;
+  }
+  .steps { margin: 0 0 12px; padding-left: 20px; font-size: 14px; }
+  .steps li { margin-bottom: 6px; }
+  .picker-msg a, .picker-msg button.linklike {
+    color: var(--text); font-weight: 600; background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; font-size: inherit;
+  }
   footer { text-align: center; color: var(--muted); font-size: 12px; margin-top: 40px; }
   .hidden { display: none !important; }
 </style>
@@ -278,9 +303,10 @@
       <input id="qInput" placeholder="Вставь ссылку на товар или напиши, что хочется…" aria-label="Быстро добавить">
       <button class="btn primary small" type="submit">Добавить</button>
     </form>
-    <p class="quick-hint">Ссылка — подтянем название и картинки с сайта · просто текст — желание добавится сразу</p>
+    <p class="quick-hint">Ссылка — попробуем подтянуть название и картинки · просто текст — желание добавится сразу</p>
     <div class="toolbar">
       <button class="btn" id="addBtn">Добавить вручную</button>
+      <button class="btn" id="bmBtn">Добавлять из магазинов</button>
       <button class="btn" id="shareBtn">Поделиться</button>
       <button class="btn" id="moreBtn">Ещё</button>
     </div>
@@ -374,8 +400,10 @@
         <input id="fNote" maxlength="300" placeholder="Размер, цвет…">
       </div>
     </div>
-    <p class="hint">Фото, загруженные с устройства, не попадают в ссылку «Поделиться».</p>
+    <p class="hint">Фото, загруженные с устройства, не попадают в ссылку «Поделиться». Плохо ищутся картинки? <button type="button" class="btn small" data-open-bm style="padding:2px 8px">Кнопка для магазинов</button></p>
     <div class="foot">
+      <button type="button" class="btn danger" id="itemDelete">Удалить</button>
+      <span class="spacer"></span>
       <button type="button" class="btn ghost" id="itemCancel">Отмена</button>
       <button type="submit" class="btn primary" id="itemSave">Сохранить</button>
     </div>
@@ -387,6 +415,8 @@
   <div id="detailBody"></div>
   <div class="dlg" style="padding-top:0">
     <div class="foot">
+      <button class="btn small danger hidden" id="detailDelete">Удалить</button>
+      <span class="spacer"></span>
       <button class="btn small hidden" id="detailEdit">Изменить</button>
       <button class="btn ghost small" id="detailClose">Закрыть</button>
     </div>
@@ -417,6 +447,7 @@
       <button class="btn" id="exportBtn">Скачать резервную копию (.json)</button>
       <button class="btn" id="importBtn">Загрузить из файла</button>
       <button class="btn" id="printBtn">Распечатать / сохранить в PDF</button>
+      <button class="btn" id="bmBtn2">Кнопка «＋ В вишлист» для магазинов</button>
       <button class="btn" id="clearBtn">Очистить вишлист</button>
       <input type="file" id="importFile" accept="application/json,.json" class="hidden">
     </div>
@@ -424,6 +455,28 @@
   </div>
 </dialog>
 
+<!-- Bookmarklet -->
+<dialog id="bmDlg">
+  <div class="dlg">
+    <h2>Добавлять из любого магазина</h2>
+    <p class="hint" style="margin-top:0">Ozon, DNS, Яндекс Маркет, Ситилинк, Wildberries, Lamoda, Золотое Яблоко и другие не отдают страницы сторонним сервисам, поэтому автопоиск по ссылке там часто не работает. Эта кнопка-закладка берёт название, цену и все картинки прямо со страницы, открытой у тебя в браузере.</p>
+    <p style="margin:0 0 4px;font-weight:600;font-size:14px">На компьютере</p>
+    <ol class="steps">
+      <li>Включи панель закладок (Ctrl+Shift+B, на Mac ⌘+Shift+B).</li>
+      <li>Перетащи эту кнопку на панель закладок:<br><a class="bm-link" id="bmLink" href="#">＋ В вишлист</a></li>
+      <li>Открой товар в магазине и нажми закладку «＋ В вишлист» — откроется вишлист с карточкой товара, останется выбрать картинку.</li>
+    </ol>
+    <p style="margin:0 0 4px;font-weight:600;font-size:14px">На телефоне (Chrome / Safari)</p>
+    <ol class="steps">
+      <li>Добавь в закладки любую страницу и назови закладку «вишлист».</li>
+      <li>Измени закладку: вместо адреса вставь код — <button type="button" class="btn small" id="bmCopy">Скопировать код</button></li>
+      <li>На странице товара (в браузере, не в приложении магазина) набери в адресной строке «вишлист» и выбери закладку.</li>
+    </ol>
+    <div class="foot"><button class="btn ghost" id="bmClose">Понятно</button></div>
+  </div>
+</dialog>
+
+<div id="trash">Отпусти, чтобы удалить</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -553,8 +606,8 @@
   // A static site can't read other sites directly, so pages are fetched through
   // public CORS proxies / microlink. Wildberries images are built from the article id.
   const withTimeout = (ms) => { const c = new AbortController(); setTimeout(() => c.abort(), ms); return c.signal; };
-  async function fetchText(url, ms = 12000) {
-    const r = await fetch(url, { signal: withTimeout(ms) });
+  async function fetchText(url, ms = 12000, headers) {
+    const r = await fetch(url, { signal: withTimeout(ms), headers });
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.text();
   }
@@ -569,6 +622,12 @@
       if (!h || h.length < 500) throw new Error('empty');
       return h;
     }));
+    return parseHtml(html, url);
+  }
+  // r.jina.ai renders the page in a headless browser and returns its HTML.
+  async function viaJina(url) {
+    const html = await fetchText('https://r.jina.ai/' + url, 25000, { 'X-Return-Format': 'html' });
+    if (!html || html.length < 500) throw new Error('empty');
     return parseHtml(html, url);
   }
   async function viaMicrolink(url) {
@@ -657,54 +716,66 @@
 
   let fetchToken = 0;
   let nameTouched = false;
+  // Stores that block third-party fetching; the bookmarklet works there.
+  const BLOCKING_HOSTS = /(^|\.)(ozon\.\w+|dns-shop\.ru|market\.yandex\.\w+|ya\.ru|citilink\.ru|mvideo\.ru|eldorado\.ru|lamoda\.ru|goldapple\.ru|letu\.ru|megamarket\.ru|aliexpress\.\w+)$/;
+  const BM_HINT = 'Самый надёжный способ для этого магазина — <button type="button" class="linklike" data-open-bm>кнопка «＋ В вишлист»</button>.';
+
+  // A picker session: images are added as sources answer; stale sessions are ignored.
+  function startPicker(host) {
+    const ctx = { token: ++fetchToken, seen: new Set(), picked: 0, titleFilled: false };
+    $('picker').classList.remove('hidden');
+    $('pickerGrid').innerHTML = '';
+    $('pickerTitle').textContent = host ? 'Картинки с ' + host : 'Картинки';
+    return ctx;
+  }
+  async function feedPicker(ctx, info) {
+    if (ctx.token !== fetchToken) return;
+    // First title found wins, unless the user already typed their own name.
+    if (info.title && !ctx.titleFilled && (!nameTouched || !$('fName').value.trim())) {
+      $('fName').value = info.title.slice(0, 120);
+      ctx.titleFilled = true;
+    }
+    const p = parseFloat(String(info.price || '').replace(/[^\d.,]/g, '').replace(',', '.'));
+    if (p > 0 && !$('fPrice').value) $('fPrice').value = p;
+    const candidates = info.images.filter((s) => {
+      if (!s || !/^https?:/.test(s) || JUNK_IMG.test(s) || ctx.seen.has(s)) return false;
+      ctx.seen.add(s);
+      return true;
+    });
+    await Promise.all(candidates.slice(0, 40).map(async (s) => {
+      const okSrc = await checkImage(s);
+      if (!okSrc || ctx.token !== fetchToken || ctx.picked >= 20) return;
+      ctx.picked++;
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.dataset.src = okSrc;
+      b.innerHTML = `<img src="${esc(okSrc)}" alt="" referrerpolicy="no-referrer">`;
+      b.classList.toggle('on', okSrc === currentImg());
+      $('pickerGrid').appendChild(b);
+      if (!currentImg()) selectPicked(okSrc);
+      $('pickerMsg').textContent = 'Нажми на картинку, чтобы выбрать её';
+    }));
+  }
+
   async function findProductInfo() {
     const url = safeUrl($('fUrl').value.trim()) || safeUrl('https://' + $('fUrl').value.trim());
     if (!url || !hostOf(url).includes('.')) { toast('Сначала вставь ссылку на товар'); return; }
-    const token = ++fetchToken;
-    const seen = new Set();
-    const picked = [];
-    let titleFilled = false;
-    $('picker').classList.remove('hidden');
-    $('pickerGrid').innerHTML = '';
-    $('pickerTitle').textContent = 'Картинки с ' + hostOf(url);
-    $('pickerMsg').innerHTML = '<span class="spinner"></span>Ищу картинки на странице товара…';
+    const host = hostOf(url);
+    const blocking = BLOCKING_HOSTS.test(host);
+    const ctx = startPicker(host);
+    $('pickerMsg').innerHTML = '<span class="spinner"></span>Ищу картинки на странице товара…' + (blocking ? '<br>' + BM_HINT : '');
     $('fFetch').disabled = true;
 
-    const addImages = async (info) => {
-      if (token !== fetchToken) return;
-      // First title found wins, unless the user already typed their own name.
-      if (info.title && !titleFilled && (!nameTouched || !$('fName').value.trim())) {
-        $('fName').value = info.title.slice(0, 120);
-        titleFilled = true;
-      }
-      const p = parseFloat(String(info.price || '').replace(/\s/g, '').replace(',', '.'));
-      if (p > 0 && !$('fPrice').value) $('fPrice').value = p;
-      const candidates = info.images.filter((s) => {
-        if (!s || !/^https?:/.test(s) || JUNK_IMG.test(s) || seen.has(s)) return false;
-        seen.add(s);
-        return true;
-      });
-      await Promise.all(candidates.slice(0, 40).map(async (s) => {
-        const okSrc = await checkImage(s);
-        if (!okSrc || token !== fetchToken || picked.length >= 16) return;
-        picked.push(okSrc);
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.dataset.src = okSrc;
-        b.innerHTML = `<img src="${esc(okSrc)}" alt="" referrerpolicy="no-referrer">`;
-        b.classList.toggle('on', okSrc === currentImg());
-        $('pickerGrid').appendChild(b);
-        if (!currentImg()) selectPicked(okSrc);
-        $('pickerMsg').textContent = 'Нажми на картинку, чтобы выбрать её';
-      }));
-    };
-    const sources = [viaMicrolink(url), viaProxies(url)];
+    const sources = [viaMicrolink(url), viaJina(url), viaProxies(url)];
     if (/wildberries|wb\.ru/.test(url)) sources.push(wildberries(url));
-    await Promise.allSettled(sources.map((p) => p.then(addImages)));
-    if (token !== fetchToken) return;
+    await Promise.allSettled(sources.map((p) => p.then((info) => feedPicker(ctx, info))));
+    if (ctx.token !== fetchToken) return;
     $('fFetch').disabled = false;
-    if (!picked.length) {
-      $('pickerMsg').textContent = 'Не удалось достать картинки — сайт их не отдаёт. Открой товар, нажми на фото правой кнопкой (или долгим тапом) → «Копировать адрес изображения» и вставь в поле «Картинка».';
+    if (!ctx.picked) {
+      $('pickerMsg').innerHTML = 'Магазин не отдал картинки. ' + BM_HINT
+        + ' Или открой товар, нажми на фото правой кнопкой (долгим тапом) → «Копировать адрес изображения» и вставь в поле «Картинка».';
+    } else if (blocking) {
+      $('pickerMsg').innerHTML = 'Нажми на картинку, чтобы выбрать её. Нет нужной? ' + BM_HINT;
     }
   }
   function selectPicked(src) {
@@ -718,6 +789,81 @@
   $('fFetch').addEventListener('click', findProductInfo);
   $('fName').addEventListener('input', () => { nameTouched = true; });
   $('fUrl').addEventListener('change', () => { if ($('fUrl').value.trim() && !$('pickerGrid').children.length) findProductInfo(); });
+
+  // ---------- bookmarklet ("＋ В вишлист") ----------
+  // Runs on the store page in the user's own browser, so anti-bot protection doesn't matter.
+  // It collects title, price and large images and opens the wishlist with #add=<data>.
+  function bookmarkletCode(site) {
+    const fn = function (SITE) {
+      var d = document, A = location.href, I = [], T = '', P = '';
+      var m = function (s) { var e = d.querySelector(s); return e ? (e.getAttribute('content') || '') : ''; };
+      var add = function (u) { try { if (u) I.push(new URL(u, A).href); } catch (e) {} };
+      d.querySelectorAll('script[type="application/ld+json"]').forEach(function (s) {
+        var w = function (o) {
+          if (!o || typeof o !== 'object') return;
+          if (Array.isArray(o)) return o.forEach(w);
+          if (/Product/.test([].concat(o['@type'] || []).join(' '))) {
+            [].concat(o.image || []).forEach(function (i) { add(typeof i === 'string' ? i : i && (i.url || i.contentUrl)); });
+            T = T || o.name || '';
+            var f = [].concat(o.offers || [])[0];
+            P = P || (f && (f.price || f.lowPrice)) || '';
+          }
+          if (o['@graph']) w(o['@graph']);
+        };
+        try { w(JSON.parse(s.textContent)); } catch (e) {}
+      });
+      add(m('meta[property="og:image"]'));
+      add(m('meta[name="twitter:image"]'));
+      [].slice.call(d.images)
+        .filter(function (i) { return i.naturalWidth >= 200 && i.naturalHeight >= 200; })
+        .sort(function (a, b) { return b.naturalWidth * b.naturalHeight - a.naturalWidth * a.naturalHeight; })
+        .slice(0, 30)
+        .forEach(function (i) { add(i.currentSrc || i.src); });
+      var h1 = d.querySelector('h1');
+      T = (h1 && h1.innerText.trim()) || T || m('meta[property="og:title"]') || d.title;
+      P = P || m('meta[property="product:price:amount"]') || m('meta[itemprop="price"]')
+        || ((d.querySelector('[itemprop="price"]') || {}).textContent || '');
+      var seen = {};
+      I = I.filter(function (u) { if (!/^https?:/.test(u) || seen[u]) return false; seen[u] = 1; return true; }).slice(0, 24);
+      var data = JSON.stringify({ u: A, t: String(T).replace(/\s+/g, ' ').slice(0, 150), p: String(P).slice(0, 30), i: I });
+      var url = SITE + '#add=' + encodeURIComponent(btoa(unescape(encodeURIComponent(data))));
+      if (!window.open(url, '_blank')) location.href = url;
+    };
+    return '(' + fn.toString() + ')(' + JSON.stringify(site) + ')';
+  }
+  function bookmarkletHref() {
+    return 'javascript:' + encodeURIComponent(bookmarkletCode(location.href.split('#')[0]));
+  }
+  function openBookmarkletHelp() {
+    $('bmLink').href = bookmarkletHref();
+    $('bmDlg').showModal();
+  }
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-open-bm]')) { e.preventDefault(); openBookmarkletHelp(); }
+  });
+  $('bmBtn').addEventListener('click', openBookmarkletHelp);
+  $('bmBtn2').addEventListener('click', () => { $('moreDlg').close(); openBookmarkletHelp(); });
+  $('bmClose').addEventListener('click', () => $('bmDlg').close());
+  $('bmLink').addEventListener('click', (e) => { e.preventDefault(); toast('Перетащи кнопку на панель закладок'); });
+  $('bmCopy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(bookmarkletHref()); toast('Код скопирован'); }
+    catch (e) { prompt('Скопируй код:', bookmarkletHref()); }
+  });
+
+  // Opened from the bookmarklet: #add=<base64 json>
+  function handleAddFromStore(code) {
+    let data;
+    try { data = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(code))))); }
+    catch (e) { toast('Не удалось прочитать данные товара'); return; }
+    const url = safeUrl(data.u);
+    openEditor(null, { url, name: String(data.t || '').trim().slice(0, 120) || guessName(url) });
+    nameTouched = true;
+    const ctx = startPicker(hostOf(url));
+    $('pickerMsg').innerHTML = '<span class="spinner"></span>Загружаю картинки…';
+    feedPicker(ctx, { title: '', price: data.p, images: Array.isArray(data.i) ? data.i.map(String) : [] }).then(() => {
+      if (ctx.token === fetchToken && !ctx.picked) $('pickerMsg').textContent = 'Картинок на странице не нашлось — можно вставить свою.';
+    });
+  }
 
   // ---------- helpers ----------
   const current = () => (viewMode ? shared : mine);
@@ -865,10 +1011,30 @@
 
   // ---------- toast ----------
   let toastTimer;
-  function toast(msg) {
+  function toast(msg, action) {
     const t = $('toast');
-    t.textContent = msg; t.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+    t.textContent = msg;
+    t.classList.toggle('actionable', !!action);
+    if (action) {
+      const b = document.createElement('button');
+      b.className = 'toast-btn';
+      b.textContent = action.label;
+      b.onclick = () => { t.classList.remove('show'); action.fn(); };
+      t.appendChild(b);
+    }
+    t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), action ? 6000 : 2400);
+  }
+
+  function deleteItem(id) {
+    const i = mine.items.findIndex((x) => x.id === id);
+    if (i < 0) return;
+    const [removed] = mine.items.splice(i, 1);
+    save(); render();
+    toast(`«${removed.name.slice(0, 30)}» удалено`, {
+      label: 'Отменить',
+      fn: () => { mine.items.splice(Math.min(i, mine.items.length), 0, removed); save(); render(); },
+    });
   }
 
   // ---------- quick add ----------
@@ -972,6 +1138,7 @@
     $('pickerGrid').innerHTML = '';
     const it = id ? mine.items.find((i) => i.id === id) : blankItem(preset);
     $('itemDlgTitle').textContent = id ? 'Изменить желание' : 'Новое желание';
+    $('itemDelete').classList.toggle('hidden', !id);
     $('fName').value = it.name;
     $('fUrl').value = it.url;
     $('fPrice').value = it.price != null ? it.price : '';
@@ -987,6 +1154,7 @@
   $('itemDlg').addEventListener('close', () => { fetchToken++; });
   $('fTier').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setTier(b.dataset.v); });
   $('itemCancel').addEventListener('click', () => $('itemDlg').close());
+  $('itemDelete').addEventListener('click', () => { $('itemDlg').close(); deleteItem(editingId); });
   $('itemForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const name = $('fName').value.trim();
@@ -1023,10 +1191,12 @@
     detailId = id;
     $('detailBody').innerHTML = cardHTML(it, list, false);
     $('detailEdit').classList.toggle('hidden', viewMode);
+    $('detailDelete').classList.toggle('hidden', viewMode);
     $('detailDlg').showModal();
   }
   $('detailClose').addEventListener('click', () => $('detailDlg').close());
   $('detailEdit').addEventListener('click', () => { $('detailDlg').close(); openEditor(detailId); });
+  $('detailDelete').addEventListener('click', () => { $('detailDlg').close(); deleteItem(detailId); });
 
   // ---------- list actions ----------
   $('addBtn').addEventListener('click', () => openEditor());
@@ -1037,10 +1207,7 @@
     if (i < 0) return;
     const act = b.dataset.act;
     if (act === 'edit') return openEditor(b.dataset.id);
-    if (act === 'del') {
-      if (!confirm(`Удалить «${mine.items[i].name}»?`)) return;
-      mine.items.splice(i, 1);
-    }
+    if (act === 'del') return deleteItem(b.dataset.id);
     if (act === 'got') mine.items[i].got = !mine.items[i].got;
     if (act === 'up' && i > 0) [mine.items[i - 1], mine.items[i]] = [mine.items[i], mine.items[i - 1]];
     save(); render();
@@ -1080,6 +1247,7 @@
     if (tile && viewMode) openDetail(tile.dataset.id);
   });
   function clearMarks() {
+    $('trash').classList.remove('over');
     document.querySelectorAll('.tier-drop.over').forEach((z) => z.classList.remove('over'));
     document.querySelectorAll('.tile.insert-before').forEach((t) => t.classList.remove('insert-before'));
   }
@@ -1091,6 +1259,7 @@
       drag.ghost.classList.add('drag-ghost');
       document.body.appendChild(drag.ghost);
       drag.tile.classList.add('dragging');
+      $('trash').classList.add('show');
     }
     drag.ghost.style.left = e.clientX + 'px';
     drag.ghost.style.top = e.clientY + 'px';
@@ -1098,7 +1267,10 @@
     else if (e.clientY > innerHeight - 70) window.scrollBy(0, 12);
 
     clearMarks();
-    const zone = document.elementFromPoint(e.clientX, e.clientY)?.closest('.tier-drop');
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    drag.trash = !!under?.closest('#trash');
+    if (drag.trash) $('trash').classList.add('over');
+    const zone = under?.closest('.tier-drop');
     drag.zone = zone || null;
     drag.before = null;
     if (!zone) return;
@@ -1120,8 +1292,10 @@
     clearMarks();
     if (d.ghost) d.ghost.remove();
     d.tile.classList.remove('dragging');
+    $('trash').classList.remove('show');
     if (cancelled) return;
     if (!d.ghost) { openDetail(d.id); return; }
+    if (d.trash) { deleteItem(d.id); return; }
     if (!d.zone) return;
     const from = mine.items.findIndex((i) => i.id === d.id);
     const [it] = mine.items.splice(from, 1);
@@ -1159,6 +1333,14 @@
 
   // ---------- view mode ----------
   async function route() {
+    const add = location.hash.match(/^#add=(.+)$/);
+    if (add) {
+      history.replaceState(null, '', location.pathname);
+      viewMode = false; shared = null;
+      render();
+      handleAddFromStore(add[1]);
+      return;
+    }
     const m = location.hash.match(/^#v=(.+)$/);
     if (m) {
       try { shared = await decode(m[1]); viewMode = true; }
