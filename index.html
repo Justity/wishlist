@@ -613,7 +613,6 @@
   }
   const PROXIES = [
     async (u) => JSON.parse(await fetchText('https://api.allorigins.win/get?url=' + encodeURIComponent(u))).contents,
-    (u) => fetchText('https://corsproxy.io/?url=' + encodeURIComponent(u)),
     (u) => fetchText('https://api.codetabs.com/v1/proxy/?quest=' + encodeURIComponent(u)),
   ];
   async function viaProxies(url) {
@@ -720,6 +719,8 @@
   const BLOCKING_HOSTS = /(^|\.)(ozon\.\w+|dns-shop\.ru|market\.yandex\.\w+|ya\.ru|citilink\.ru|mvideo\.ru|eldorado\.ru|lamoda\.ru|goldapple\.ru|letu\.ru|megamarket\.ru|aliexpress\.\w+)$/;
   const BM_HINT = 'Самый надёжный способ для этого магазина — <button type="button" class="linklike" data-open-bm>кнопка «＋ В вишлист»</button>.';
 
+  // Anti-bot pages, error pages and bare URL slugs are not product names.
+  const BAD_TITLE = /^[\w.]+(-[\w.]+)+$|^https?:|не робот|robot|captcha|доступ (ограничен|запрещ)|access denied|forbidden|just a moment|attention required|ошибка|error|^\d{3}\b|qrator|проверка браузера|подождите/i;
   // A picker session: images are added as sources answer; stale sessions are ignored.
   function startPicker(host) {
     const ctx = { token: ++fetchToken, seen: new Set(), picked: 0, titleFilled: false };
@@ -730,8 +731,8 @@
   }
   async function feedPicker(ctx, info) {
     if (ctx.token !== fetchToken) return;
-    // First title found wins, unless the user already typed their own name.
-    if (info.title && !ctx.titleFilled && (!nameTouched || !$('fName').value.trim())) {
+    // First real title found wins, unless the user already typed their own name.
+    if (info.title && !BAD_TITLE.test(info.title.trim()) && !ctx.titleFilled && (!nameTouched || !$('fName').value.trim())) {
       $('fName').value = info.title.slice(0, 120);
       ctx.titleFilled = true;
     }
